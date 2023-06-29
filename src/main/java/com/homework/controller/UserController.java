@@ -3,13 +3,14 @@ package com.homework.controller;
 import com.homework.model.User;
 import com.homework.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/test-work-controller")
@@ -37,6 +38,38 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     };
+
+    @GetMapping("/users-page")
+    public ResponseEntity<Map<String, Object>> getUsersPage(
+            @RequestParam(required = false) String username,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        try {
+            List<User> users;
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<User> usersPage;
+            if(username != null ) {
+                usersPage = userRepository.findByUsernameContaining(username, paging);
+            } else {
+                usersPage = userRepository.findAll(paging);
+            }
+
+            users = usersPage.getContent();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("users", users);
+            response.put("totalElements", usersPage.getTotalElements());
+            response.put("totalPages", usersPage.getTotalPages());
+            response.put("size", usersPage.getSize());
+            response.put("number", usersPage.getNumber());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") String id) {
