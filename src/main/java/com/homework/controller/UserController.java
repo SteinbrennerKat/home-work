@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/users")
+    @GetMapping("/all-users")
     public ResponseEntity<List<User>> getUsers(@RequestParam(required = false) String username) {
         try {
             List<User> users = new ArrayList<User>();
@@ -60,7 +60,7 @@ public class UserController {
                     user.getUsername(),
                     user.getAge(),
                     user.getSex()
-                    ));
+                    )).withCreatedDate();
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,6 +80,7 @@ public class UserController {
             _user.setUsername(user.getUsername());
             _user.setAge(user.getAge());
             _user.setSex(user.getSex());
+            _user.setUpdatedDate();
             return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

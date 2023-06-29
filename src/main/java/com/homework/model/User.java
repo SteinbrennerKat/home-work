@@ -3,6 +3,9 @@ package com.homework.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Document(collection = "users")
 public class User {
     @Id
@@ -15,6 +18,8 @@ public class User {
     private String username;
     private String age;
     private String sex;
+    private String createdDate;
+    private String updatedDate;
 
     public User() {
     }
@@ -37,6 +42,16 @@ public class User {
         this.username = username;
         this.age = age;
         this.sex = sex;
+    }
+
+    public User withCreatedDate() {
+        this.createdDate = Instant.now().toString();
+        return this;
+    }
+
+    public User withUpdatedDate() {
+        this.updatedDate = Instant.now().toString();
+        return this;
     }
 
     public String getId() {
@@ -74,6 +89,12 @@ public class User {
     public String getSex() {
         return sex;
     }
+    public String getCreatedDate() {
+        return createdDate;
+    }
+    public String getUpdatedDate() {
+        return updatedDate;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -106,6 +127,11 @@ public class User {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
+    public void setUpdatedDate() {
+        this.updatedDate = Instant.now().toString();
+    }
+
     @Override
     public String toString() {
         return "User[" +
