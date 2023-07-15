@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import java.util.*;
 
 @RestController
-@RequestMapping("/test-work-controller")
+@RequestMapping("/home-work-users")
 public class UserController {
 
     @Autowired
