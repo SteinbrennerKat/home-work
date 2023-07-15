@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/home-work-users")
@@ -43,7 +45,7 @@ public class UserController {
 
     @GetMapping("/users-page")
     public ResponseEntity<Map<String, Object>> getUsersPage(
-            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String createdDate,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
@@ -53,14 +55,8 @@ public class UserController {
             Sort sort = Sort.by(Objects.equals(direction, "DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortOrder);
             List<User> users;
             Pageable paging = PageRequest.of(page, size, sort);
-
             Page<User> usersPage;
-            if(username != null ) {
-                usersPage = userRepository.findByUsernameContaining(username, paging);
-            } else {
-                usersPage = userRepository.findAll(paging);
-            }
-
+            usersPage = userRepository.findByCreatedDateGreaterThan(createdDate != null ? Long.parseLong(createdDate) : Instant.now().toEpochMilli() - TimeUnit.DAYS.toMillis(365), paging);
             users = usersPage.getContent();
 
             Map<String, Object> response = new HashMap<>();
