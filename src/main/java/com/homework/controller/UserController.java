@@ -94,7 +94,8 @@ public class UserController {
                     user.getSurname(),
                     user.getEmail(),
                     user.getUsername(),
-                    user.getRole()
+                    user.getRole(),
+                    user.getAge()
                     ));
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -112,6 +113,7 @@ public class UserController {
             _user.setEmail(user.getEmail());
             _user.setUsername(user.getUsername());
             _user.setRole(user.getRole());
+            _user.setAge(user.getAge());
             return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

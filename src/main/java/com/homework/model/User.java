@@ -17,7 +17,7 @@ public class User {
     private Long version;
     private String name;
     private String surname;
-
+    private Integer age;
     private String role;
     @Indexed(name = "email_index", unique = true)
     private String email;
@@ -33,13 +33,15 @@ public class User {
             String surname,
             String email,
             String username,
-            String role
+            String role,
+            Integer age
     ) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.username = username;
         this.role = role;
+        this.age = age;
         this.createdDate = Instant.now().toEpochMilli();
     }
 
@@ -70,6 +72,10 @@ public class User {
         return role;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -98,6 +104,10 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public void setRole(String role) {
