@@ -1,56 +1,52 @@
 package com.homework.model;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Document(collection = "users")
 public class User {
     @Id
     private String id;
+    @Version
+    private Long version;
     private String name;
     private String surname;
-    private String hash;
-    private String password;
+
+    private String role;
+    @Indexed(name = "email_index", unique = true)
     private String email;
     private String username;
-    private String age;
-    private String sex;
-    private String createdDate;
-    private String updatedDate;
 
-    public User() {
-    }
+    @CreatedDate
+    private Long createdDate;
+    @LastModifiedDate
+    private Long updatedDate;
 
     public User(
             String name,
             String surname,
-            String hash,
-            String password,
             String email,
             String username,
-            String age,
-            String sex
+            String role
     ) {
         this.name = name;
         this.surname = surname;
-        this.hash = hash;
-        this.password = password;
         this.email = email;
         this.username = username;
-        this.age = age;
-        this.sex = sex;
-    }
-
-    public User withCreatedDate() {
-        this.createdDate = Instant.now().toString();
-        return this;
+        this.role = role;
+        this.createdDate = Instant.now().toEpochMilli();
     }
 
     public User withUpdatedDate() {
-        this.updatedDate = Instant.now().toString();
+        if (version >= 0) {
+            this.updatedDate = Instant.now().toEpochMilli();
+        }
         return this;
     }
 
@@ -66,33 +62,22 @@ public class User {
         return surname;
     }
 
-    public String getHash() {
-        return hash;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getAge() {
-        return age;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-    public String getCreatedDate() {
+    public Long getCreatedDate() {
         return createdDate;
     }
-    public String getUpdatedDate() {
+    public Long getUpdatedDate() {
         return updatedDate;
     }
 
@@ -104,14 +89,6 @@ public class User {
         this.surname = surname;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -120,16 +97,8 @@ public class User {
         this.username = username;
     }
 
-    public void setAge(String age) {
-        this.age = age;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public void setUpdatedDate() {
-        this.updatedDate = Instant.now().toString();
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

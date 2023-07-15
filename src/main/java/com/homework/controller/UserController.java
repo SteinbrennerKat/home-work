@@ -87,13 +87,10 @@ public class UserController {
             User _user = userRepository.save(new User(
                     user.getName(),
                     user.getSurname(),
-                    user.getHash(),
-                    user.getPassword(),
                     user.getEmail(),
                     user.getUsername(),
-                    user.getAge(),
-                    user.getSex()
-                    )).withCreatedDate();
+                    user.getRole()
+                    ));
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -104,16 +101,12 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody User user) {
         Optional<User> userData = userRepository.findById(id);
         if (userData.isPresent()) {
-            User _user = userData.get();
+            User _user = userData.get().withUpdatedDate();
             _user.setName(user.getName());
             _user.setSurname(user.getSurname());
-            _user.setHash(user.getHash());
-            _user.setPassword(user.getPassword());
             _user.setEmail(user.getEmail());
             _user.setUsername(user.getUsername());
-            _user.setAge(user.getAge());
-            _user.setSex(user.getSex());
-            _user.setUpdatedDate();
+            _user.setRole(user.getRole());
             return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -130,7 +123,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user")
+    @DeleteMapping("/user-delete-all")
     public ResponseEntity<User> deleteAllUsers() {
         try {
             userRepository.deleteAll();
