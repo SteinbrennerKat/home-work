@@ -3,9 +3,11 @@ package com.homework.controller;
 import com.homework.model.User;
 import com.homework.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -43,11 +45,14 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> getUsersPage(
             @RequestParam(required = false) String username,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "DESC") String direction,
+            @RequestParam(defaultValue = "createdDate") String sortOrder
     ) {
         try {
+            Sort sort = Sort.by(Objects.equals(direction, "DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortOrder);
             List<User> users;
-            Pageable paging = PageRequest.of(page, size);
+            Pageable paging = PageRequest.of(page, size, sort);
 
             Page<User> usersPage;
             if(username != null ) {
