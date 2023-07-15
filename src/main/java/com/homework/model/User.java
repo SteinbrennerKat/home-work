@@ -74,11 +74,14 @@ public class User {
         return username;
     }
 
-    public Long getCreatedDate() {
-        return createdDate;
+    public Instant getCreatedDate() {
+        return Instant.ofEpochMilli(createdDate);
     }
-    public Long getUpdatedDate() {
-        return updatedDate;
+    public Instant getUpdatedDate() {
+        if (updatedDate == null) {
+            return null;
+        }
+        return Instant.ofEpochMilli(updatedDate);
     }
 
     public void setName(String name) {
