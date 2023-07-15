@@ -1,4 +1,4 @@
-package com.homework.model;
+package com.homework.dto;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
